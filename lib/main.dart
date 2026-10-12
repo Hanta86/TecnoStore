@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'auth_page.dart';
 
 Future<void> main() async {
@@ -72,6 +73,71 @@ class TiendaPage extends StatefulWidget {
 }
 
 class _TiendaPageState extends State<TiendaPage> {
+  final FirebaseFirestore db = FirebaseFirestore.instance;
+  Future<void> consultarProductos() async {
+    try {
+      final resultado = await db.collection('Productos').get();
+
+      final nuevosProductos = resultado.docs.map((documento) {
+        final datos = documento.data();
+
+        IconData icono = Icons.devices_other;
+
+        switch (datos['categoria']) {
+          case 'Audio':
+            icono = Icons.headphones;
+            break;
+          case 'Computación':
+            icono = Icons.computer;
+            break;
+          case 'Accesorios':
+            icono = Icons.cable;
+            break;
+        }
+
+        return Producto(
+          id: int.parse(documento.id),
+          nombre: datos['nombre'] as String,
+          categoria: datos['categoria'] as String,
+          precio: (datos['precio'] as num).toInt(),
+          icono: icono,
+          descripcion: datos['descripcion'] as String,
+          stock: (datos['stock'] as num).toInt(),
+        );
+      }).toList();
+
+      if (!mounted) return;
+
+      setState(() {
+        productos
+          ..clear()
+          ..addAll(nuevosProductos);
+
+        cargandoProductos = false;
+        errorProductos = null;
+      });
+
+      debugPrint('Productos cargados desde Firestore: ${productos.length}');
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        cargandoProductos = false;
+        errorProductos = e.toString();
+      });
+
+      debugPrint('Error al cargar productos: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    consultarProductos();
+  }
+
+  bool cargandoProductos = true;
+  String? errorProductos;
   final List<Producto> productos = [
     Producto(
       id: 1,
