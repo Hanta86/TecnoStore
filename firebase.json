@@ -1,1 +1,39 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"tecnostore-5cdec","appId":"1:167300090334:android:41ec418c5f0baed1e4754f","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"tecnostore-5cdec","configurations":{"android":"1:167300090334:android:41ec418c5f0baed1e4754f","web":"1:167300090334:web:eb677b609bd84c3fe4754f"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "tecnostore-5cdec",
+          "appId": "1:167300090334:android:41ec418c5f0baed1e4754f",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "tecnostore-5cdec",
+          "configurations": {
+            "android": "1:167300090334:android:41ec418c5f0baed1e4754f",
+            "web": "1:167300090334:web:eb677b609bd84c3fe4754f"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "disallowLegacyRuntimeConfig": true,
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ]
+}
